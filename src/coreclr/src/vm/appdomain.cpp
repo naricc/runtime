@@ -669,6 +669,7 @@ BaseDomain::BaseDomain()
     m_JITLock.PreInit();
     m_ClassInitLock.PreInit();
     m_ILStubGenLock.PreInit();
+    m_NativeTypeLoadLock.PreInit();
 
 #ifdef FEATURE_CODE_VERSIONING
     m_codeVersionManager.PreInit();
@@ -724,6 +725,7 @@ void BaseDomain::Init()
     m_ClassInitLock.Init(CrstClassInit, CrstFlags(CRST_REENTRANCY | CRST_UNSAFE_SAMELEVEL), TRUE);
 
     m_ILStubGenLock.Init(CrstILStubGen, CrstFlags(CRST_REENTRANCY), TRUE);
+    m_NativeTypeLoadLock.Init(CrstInteropData, CrstFlags(CRST_REENTRANCY), TRUE);
 
     // Large heap handle table CRST.
     m_LargeHeapHandleTableCrst.Init(CrstAppDomainHandleTable);
@@ -2004,6 +2006,10 @@ void SystemDomain::LoadBaseSystemClasses()
     g_pDelegateClass = MscorlibBinder::GetClass(CLASS__DELEGATE);
     g_pMulticastDelegateClass = MscorlibBinder::GetClass(CLASS__MULTICAST_DELEGATE);
 
+#ifndef CROSSGEN_COMPILE
+    CrossLoaderAllocatorHashSetup::EnsureTypesLoaded();
+#endif
+
     // used by IsImplicitInterfaceOfSZArray
     MscorlibBinder::GetClass(CLASS__IENUMERABLEGENERIC);
     MscorlibBinder::GetClass(CLASS__ICOLLECTIONGENERIC);
@@ -2018,10 +2024,6 @@ void SystemDomain::LoadBaseSystemClasses()
     // Load Utf8String
     g_pUtf8StringClass = MscorlibBinder::GetClass(CLASS__UTF8_STRING);
 #endif // FEATURE_UTF8STRING
-
-#ifndef CROSSGEN_COMPILE
-    CrossLoaderAllocatorHashSetup::EnsureTypesLoaded();
-#endif
 
 #ifndef CROSSGEN_COMPILE
     ECall::PopulateManagedStringConstructors();

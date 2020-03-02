@@ -29,6 +29,7 @@
 #include "interoputil.h"
 #include "prettyprintsig.h"
 #include "formattype.h"
+#include "fieldmarshaler.h"
 
 #ifdef FEATURE_PREJIT
 #include "compile.h"
@@ -103,7 +104,7 @@ class ArgIteratorBaseForPInvoke : public ArgIteratorBase
 protected:
     FORCEINLINE BOOL IsRegPassedStruct(MethodTable* pMT)
     {
-        return pMT->GetLayoutInfo()->IsNativeStructPassedInRegisters();
+        return pMT->GetNativeLayoutInfo()->IsNativeStructPassedInRegisters();
     }
 };
 
@@ -2645,7 +2646,7 @@ void MethodDesc::Save(DataImage *image)
 
     if (GetMethodDictionary())
     {
-        DWORD cBytes = DictionaryLayout::GetFirstDictionaryBucketSize(GetNumGenericMethodArgs(), GetDictionaryLayout());
+        DWORD cBytes = DictionaryLayout::GetDictionarySizeFromLayout(GetNumGenericMethodArgs(), GetDictionaryLayout());
         void* pBytes = GetMethodDictionary()->AsPtr();
 
         LOG((LF_ZAP, LL_INFO10000, "    MethodDesc::Save dictionary size %d\n", cBytes));
