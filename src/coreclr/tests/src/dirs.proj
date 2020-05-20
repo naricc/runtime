@@ -19,8 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <AllProjects Include="*\**\*.csproj" Exclude="@(DisabledProjects)" />
-      <AllProjects Include="*\**\*.ilproj" Exclude="@(DisabledProjects)" />
+      <!-- Temporarily enable only one test for fast iteration. -->
+      <AllProjects Include="baseservices/mono/runningmono.csproj" />
+      <!-- <AllProjects Include="*\**\*.csproj" Exclude="@(DisabledProjects)" />
+      <AllProjects Include="*\**\*.ilproj" Exclude="@(DisabledProjects)" /> -->
     </ItemGroup>
 
     <!-- All the test projects are partitioned into the test groups as defined below.
