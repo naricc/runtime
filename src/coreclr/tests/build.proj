@@ -26,6 +26,12 @@
     <RestoreProjects Include="$(MSBuildThisFileDirectory)src\Common\ilasm\ilasm.ilproj" />
   </ItemGroup>
 
+<Target Name="RemoveAndroidAppHost" AfterTargets="ProcessFrameworkReferences" >
+    <ItemGroup>
+          <PackageDownload Remove="Microsoft.NETCore.App.Host.android-x64" />
+    </ItemGroup>
+</Target> 
+
   <Target Name="BuildTargetingPack" AfterTargets="BatchRestorePackages" Condition="$(__SkipTargetingPackBuild) != 'true'">
     <Message Text="Building Targeting Pack" Importance="High" />
     <Error  Text="TargetOS has not been specified. Please do that then run build again."  Condition="'$(TargetOS)' == 'AnyOS'" />
@@ -42,6 +48,12 @@
              Targets="RestorePackage" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Restoring all packages...Done." />
+  </Target>
+
+  <Target Name="RemoveAndroidAppHost" AfterTargets="ProcessFrameworkReferences" >
+    <ItemGroup>
+          <PackageDownload Remove="Microsoft.NETCore.App.Host.android-x64" />
+    </ItemGroup>
   </Target>
 
   <Target Name="RestorePackage">

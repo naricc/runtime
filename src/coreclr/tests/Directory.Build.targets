@@ -8,4 +8,10 @@
 
   <Import Project="disableversioncheck.targets" Condition="'$(DisableVersionCheckImported)' != 'true'" />
 
+  <Target Name="RemoveAndroidAppHost" AfterTargets="ProcessFrameworkReferences" >
+    <ItemGroup>
+          <PackageDownload Remove="Microsoft.NETCore.App.Host.android-x64" />
+    </ItemGroup>
+ </Target>
+
 </Project>

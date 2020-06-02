@@ -18,7 +18,8 @@
   <Target Name="Build" DependsOnTargets="$(TraversalBuildDependsOn)" />
 
   <PropertyGroup>
-    <UseAppHost>false</UseAppHost> 
+    <UseAppHost>false</UseAppHost>
+    <RestoreUseStaticGraphEvaluation>false</RestoreUseStaticGraphEvaluation>
     <ProjectAssetsFile>$(TestSourceDir)Common\test_dependencies\obj\project.assets.json</ProjectAssetsFile>
   </PropertyGroup>
 
@@ -39,4 +40,12 @@
       <RuntimeCopyLocalItems Include="@(LibrariesRuntimeFiles)" />
     </ItemGroup>
   </Target>
+
+    
+  <Target Name="RemoveAndroidAppHost" AfterTargets="ProcessFrameworkReferences" >
+    <ItemGroup>
+          <PackageDownload Remove="Microsoft.NETCore.App.Host.android-x64" />
+    </ItemGroup>
+  </Target>
+
 </Project>
