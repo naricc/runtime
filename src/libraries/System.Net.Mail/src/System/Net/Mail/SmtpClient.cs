@@ -187,7 +187,7 @@ namespace System.Net.Mail
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                if (value == string.Empty)
+                if (value.Length == 0)
                 {
                     throw new ArgumentException(SR.net_emptystringset, nameof(value));
                 }
@@ -800,7 +800,7 @@ namespace System.Net.Mail
             }
 
             // Create a TaskCompletionSource to represent the operation
-            var tcs = new TaskCompletionSource<object?>();
+            var tcs = new TaskCompletionSource();
 
             CancellationTokenRegistration ctr = default;
 
@@ -827,7 +827,7 @@ namespace System.Net.Mail
                     {
                         if (e.Error != null) tcs.TrySetException(e.Error);
                         else if (e.Cancelled) tcs.TrySetCanceled();
-                        else tcs.TrySetResult(null);
+                        else tcs.TrySetResult();
                     }
                 }
             };

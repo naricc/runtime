@@ -1686,6 +1686,13 @@ bool Compiler::StructPromotionHelper::CanPromoteStructType(CORINFO_CLASS_HANDLE 
     structPromotionInfo.fieldCnt = (unsigned char)fieldCnt;
     DWORD typeFlags              = compHandle->getClassAttribs(typeHnd);
 
+    if (StructHasNoPromotionFlagSet(typeFlags))
+    {
+        // In AOT ReadyToRun compilation, don't try to promote fields of types
+        // outside of the current version bubble.
+        return false;
+    }
+
     bool overlappingFields = StructHasOverlappingFields(typeFlags);
     if (overlappingFields)
     {
@@ -1971,10 +1978,12 @@ bool Compiler::StructPromotionHelper::ShouldPromoteStructVar(unsigned lclNum)
 //
 void Compiler::StructPromotionHelper::SortStructFields()
 {
-    assert(!structPromotionInfo.fieldsSorted);
-    qsort(structPromotionInfo.fields, structPromotionInfo.fieldCnt, sizeof(*structPromotionInfo.fields),
-          lvaFieldOffsetCmp);
-    structPromotionInfo.fieldsSorted = true;
+    if (!structPromotionInfo.fieldsSorted)
+    {
+        qsort(structPromotionInfo.fields, structPromotionInfo.fieldCnt, sizeof(*structPromotionInfo.fields),
+              lvaFieldOffsetCmp);
+        structPromotionInfo.fieldsSorted = true;
+    }
 }
 
 //--------------------------------------------------------------------------------------------
@@ -2158,10 +2167,7 @@ void Compiler::StructPromotionHelper::PromoteStructVar(unsigned lclNum)
     }
 #endif
 
-    if (!structPromotionInfo.fieldsSorted)
-    {
-        SortStructFields();
-    }
+    SortStructFields();
 
     for (unsigned index = 0; index < structPromotionInfo.fieldCnt; ++index)
     {
@@ -4079,7 +4085,7 @@ void Compiler::lvaMarkLocalVars()
     else if (lvaReportParamTypeArg())
     {
         // We should have a context arg.
-        assert(info.compTypeCtxtArg != BAD_VAR_NUM);
+        assert(info.compTypeCtxtArg != (int)BAD_VAR_NUM);
         lvaGetDesc(info.compTypeCtxtArg)->lvImplicitlyReferenced = reportParamTypeArg;
     }
 

@@ -118,8 +118,8 @@ namespace System.Text
         private bool _isReadOnly = true;
 
         // Encoding (encoder) fallback
-        internal EncoderFallback encoderFallback = null!;
-        internal DecoderFallback decoderFallback = null!;
+        internal EncoderFallback encoderFallback;
+        internal DecoderFallback decoderFallback;
 
         protected Encoding() : this(0)
         {
@@ -159,6 +159,8 @@ namespace System.Text
         }
 
         // Default fallback that we'll use.
+        [MemberNotNull(nameof(encoderFallback))]
+        [MemberNotNull(nameof(decoderFallback))]
         internal virtual void SetDefaultFallbacks()
         {
             // For UTF-X encodings, we use a replacement fallback with an "\xFFFD" string,
@@ -489,11 +491,8 @@ namespace System.Text
 
         public static Encoding ASCII => ASCIIEncoding.s_default;
 
-        // Returns an encoding for the Latin1 character set. The returned encoding
-        // will be an instance of the Latin1Encoding class.
-        //
-        // This is for our optimizations
-        private static Encoding Latin1 => Latin1Encoding.s_default;
+        /// <summary>Gets an encoding for the Latin1 character set (ISO-8859-1).</summary>
+        public static Encoding Latin1 => Latin1Encoding.s_default;
 
         // Returns the number of bytes required to encode the given character
         // array.
