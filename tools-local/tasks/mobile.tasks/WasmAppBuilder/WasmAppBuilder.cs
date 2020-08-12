@@ -105,8 +105,13 @@ public class WasmAppBuilder : Task
         {
             foreach (var item in ExtraAssemblies)
             {
-                var refAssembly = mlc.LoadFromAssemblyPath(item.ItemSpec);
-                Add(mlc, refAssembly);
+		try {
+                	var refAssembly = mlc.LoadFromAssemblyPath(item.ItemSpec);
+                	Add(mlc, refAssembly);
+		}
+		catch (System.IO.FileLoadException)
+		{
+		}
             }
         }
 

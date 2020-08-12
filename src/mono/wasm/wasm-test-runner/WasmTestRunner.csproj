@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="BuildApp">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <OutputPath>bin</OutputPath>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <TargetFramework>$(NetCoreAppCurrent)</TargetFramework>
+    <TargetArchitecture>wasm</TargetArchitecture>
+    <TargetOS>Browser</TargetOS>
+    <MicrosoftNetCoreAppRuntimePackDir>$(ArtifactsBinDir)microsoft.netcore.app.runtime.browser-wasm\$(Configuration)\runtimes\browser-wasm\</MicrosoftNetCoreAppRuntimePackDir>
+    <BuildDir>$(MSBuildThisFileDirectory)\obj\$(Configuration)\wasm</BuildDir>
+    <AppDir>$(TestBinDir)/WasmApp/</AppDir>
+    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>  
+    <PlatformTarget>AnyCPU</PlatformTarget>   
+  </PropertyGroup>
+
+  <Target Name="RebuildWasmAppBuilder">
+    <MSBuild Projects="$(RepoRoot)\tools-local\tasks\mobile.tasks\WasmAppBuilder\WasmAppBuilder.csproj"
+             Properties="Configuration=$(Configuration)" Targets="Restore;Build;Publish" />
+  </Target>
+
+  <UsingTask TaskName="WasmAppBuilder" 
+      AssemblyFile="$(ArtifactsBinDir)\WasmAppBuilder\$(Configuration)\$(NetCoreAppCurrent)\publish\WasmAppBuilder.dll"/>
+
+  <Target Name="BuildApp" DependsOnTargets="RebuildWasmAppBuilder;Build;Publish">
+    <ItemGroup>
+      <AssemblySearchPaths Include="bin"/>
+      <AssemblySearchPaths Include="$(MicrosoftNetCoreAppRuntimePackDir)\native"/>
+      <AssemblySearchPaths Include="$(MicrosoftNetCoreAppRuntimePackDir)\lib\$(NetCoreAppCurrent)"/>
+      <AssemblySearchPaths Include="$(ArtifactsDir)/TargetingPack" />
+    </ItemGroup>
+
+    <ItemGroup>
+	    <TestAssemblies Include="$(TestAssembly)" />
+    </ItemGroup>
+  
+    <Message Importance="High" Text="TestAssemblies: @(TestAssemblies)"/> 
+    <Message Importance="High" Text="AppDir: $(AppDir)" />
+    <Message Importance="High" Text="TestBinDir: $(TestBinDir)" />
+    <Message Importance="High" Text="ArtifactsBinDir: $(ArtifactsBinDir)" />
+
+
+    <WasmAppBuilder
+      AppDir="$(AppDir)"
+      MicrosoftNetCoreAppRuntimePackDir="$(MicrosoftNetCoreAppRuntimePackDir)"
+      MainAssembly="./bin/browser-wasm/publish/WasmTestRunner.dll"
+      MainJS="$(MonoProjectRoot)\wasm\runtime-test.js"
+      AssemblySearchPaths="@(AssemblySearchPaths)"
+      ExtraAssemblies="@(TestAssemblies)"
+      />
+
+
+
+    <Exec Command="chmod a+x $(AppDir)/run-v8.sh" />
+  </Target>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+</Project>
