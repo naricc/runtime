@@ -22,6 +22,7 @@
 
   <Target Name="AotApp" AfterTargets="CopyFilesToPublishDirectory">
    <Message Text="--AotApp step--" Importance="high"/>
+   <Message Text="PublishDir: $(PublishDir)" Importance="high"/>
    <ItemGroup>
      <AotInputAssemblies Include="$(PublishDir)\*.dll">
         <AotArguments>@(MonoAOTCompilerDefaultAotArguments, ';')</AotArguments>
@@ -29,16 +30,20 @@
      </AotInputAssemblies>
    </ItemGroup>
 
+   <Message Text="AotInputAssemblies: @(AotInputAssemblies)" Importance="high" />
+
     <MonoAOTCompiler
-        Condition="'$(ForceAOT)' == 'true'"
         CompilerBinaryPath="/Users/naricc/workspace/runtime-aot-llvm/artifacts/obj/mono/OSX.x64.Debug/mono/mini/mono-sgen"
         Mode="Full"
         OutputType="AsmOnly"
         Assemblies="@(AotInputAssemblies)"
-        UseLLVM="$(UseLLVM)"
-        LLVMPath="$(MicrosoftNetCoreAppRuntimePackDir)native\cross\android-$(TargetArchitecture)">
+        UseLLVM="true"
+        LLVMPath="$(MicrosoftNetCoreAppRuntimePackDir)\native">
         <Output TaskParameter="CompiledAssemblies" ItemName="BundleAssemblies" />
     </MonoAOTCompiler>
+
+   <Message Text="CompiledAssemblies: $(BundleAssemblies)" Importance="high"/>
+
    </Target>
 
 
