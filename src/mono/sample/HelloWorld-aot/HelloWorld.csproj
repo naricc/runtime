@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(NetCoreAppToolCurrent)</TargetFramework>
+    <MicrosoftNetCoreAppRuntimePackDir>/Users/naricc/workspace/runtime-aot-llvm/artifacts/bin/microsoft.netcore.app.runtime.osx-x64/Debug/runtimes/osx-x64</MicrosoftNetCoreAppRuntimePackDir>
+    <EnableTargetingPackDownload>false</EnableTargetingPackDownload>
+  </PropertyGroup>
+
+  <!-- Redirect 'dotnet publish' to in-tree runtime pack -->
+  <Target Name="TrickRuntimePackLocation" AfterTargets="ProcessFrameworkReferences">
+    <ItemGroup>
+      <RuntimePack>
+        <PackageDirectory>$(ArtifactsBinDir)microsoft.netcore.app.runtime.$(RuntimeIdentifier)\$(Configuration)</PackageDirectory>
+      </RuntimePack>
+    </ItemGroup>
+    <Message Text="Packaged ID: %(RuntimePack.PackageDirectory)" Importance="high" />
+  </Target>
+
+  <Import Project="$(RepoTasksDir)AotCompilerTask\MonoAOTCompiler.props" />
+  <UsingTask TaskName="MonoAOTCompiler" AssemblyFile="$(MonoAOTCompilerTasksAssemblyPath)" />
+
+
+  <Target Name="AotApp" AfterTargets="CopyFilesToPublishDirectory">
+   <Message Text="--AotApp step--" Importance="high"/>
+   <ItemGroup>
+     <AotInputAssemblies Include="$(PublishDir)\*.dll">
+        <AotArguments>@(MonoAOTCompilerDefaultAotArguments, ';')</AotArguments>
+        <ProcessArguments>@(MonoAOTCompilerDefaultProcessArguments, ';')</ProcessArguments>
+     </AotInputAssemblies>
+   </ItemGroup>
+
+    <MonoAOTCompiler
+        Condition="'$(ForceAOT)' == 'true'"
+        CompilerBinaryPath="/Users/naricc/workspace/runtime-aot-llvm/artifacts/obj/mono/OSX.x64.Debug/mono/mini/mono-sgen"
+        Mode="Full"
+        OutputType="AsmOnly"
+        Assemblies="@(AotInputAssemblies)"
+        UseLLVM="$(UseLLVM)"
+        LLVMPath="$(MicrosoftNetCoreAppRuntimePackDir)native\cross\android-$(TargetArchitecture)">
+        <Output TaskParameter="CompiledAssemblies" ItemName="BundleAssemblies" />
+    </MonoAOTCompiler>
+   </Target>
+
+
+
+</Project>
