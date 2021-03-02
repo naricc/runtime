@@ -6,11 +6,9 @@
     <EnableTargetingPackDownload>false</EnableTargetingPackDownload>
   </PropertyGroup>
 
-  <!--
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Runtime.MonoAOTCompiler.Task" version="6.0.0-preview.3.21151.8"/>
   </ItemGroup>
-  -->
 
   <!-- Redirect 'dotnet publish' to in-tree runtime pack -->
   <Target Name="TrickRuntimePackLocation" AfterTargets="ProcessFrameworkReferences">
@@ -23,7 +21,7 @@
   </Target>
 
   <!-- <Import Project="$(RepoTasksDir)AotCompilerTask\MonoAOTCompiler.props" /> -->
-  <UsingTask TaskName="MonoAOTCompiler" AssemblyFile="/Users/naricc/workspace/runtime-aot-llvm/artifacts/bin/MonoAOTCompiler/Debug/net5.0/MonoAOTCompiler.dll" /> 
+  <UsingTask TaskName="MonoAOTCompiler" AssemblyFile="$(PkgMicrosoft_NET_Runtime_MonoAOTCompiler_Task)/MonoAOTCompiler_dll" /> 
 
 
   <Target Name="AotApp" AfterTargets="CopyFilesToPublishDirectory">
