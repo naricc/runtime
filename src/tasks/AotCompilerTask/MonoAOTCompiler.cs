@@ -45,7 +45,7 @@ public class MonoAOTCompiler : Microsoft.Build.Utilities.Task
     [NotNull]
     [Required]
     public string? OutputDir { get; set; }
-
+    
     /// <summary>
     /// Assemblies which were AOT compiled.
     ///

@@ -22,5 +22,11 @@ run: publish
 	MONO_ENV_OPTIONS="$(MONO_ENV_OPTIONS)" \
 	$(TOP)artifacts/bin/HelloWorld/$(MONO_ARCH)/$(MONO_CONFIG)/$(TARGET_OS)-$(MONO_ARCH)/publish/HelloWorld
 
+aot: publish
+	COMPlus_DebugWriteToStdErr=1 \
+	MONO_ENV_OPTIONS="--aot=LLVM" \
+	$(TOP)artifacts/bin/HelloWorld/$(MONO_ARCH)/$(MONO_CONFIG)/$(TARGET_OS)-$(MONO_ARCH)/publish/HelloWorld
+
+
 clean:
 	rm -rf $(TOP)artifacts/bin/HelloWorld/
