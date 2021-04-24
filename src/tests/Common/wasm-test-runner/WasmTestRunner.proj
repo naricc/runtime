@@ -12,6 +12,7 @@
     <NETCoreAppMaximumVersion>99.0</NETCoreAppMaximumVersion>
     <WasmAppBuilderTasksAssemblyPath>$(CORE_ROOT)\WasmAppBuilder\WasmAppBuilder.dll</WasmAppBuilderTasksAssemblyPath>
     <MonoAOTCompilerTasksAssemblyPath>$(CORE_ROOT)\MonoAOTCompiler\MonoAOTCompiler.dll</MonoAOTCompilerTasksAssemblyPath>
+    <EMSDK_PATH>$(CORE_ROOT)\emsdk</EMSDK_PATH>
   </PropertyGroup>
 
   <Target Name="BuildApp" BeforeTargets="WasmBuildApp">
