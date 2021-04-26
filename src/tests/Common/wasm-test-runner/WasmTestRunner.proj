@@ -4,7 +4,8 @@
   <Import Project="$(CORE_ROOT)\build\WasmApp.InTree.props" />
   <PropertyGroup>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <MicrosoftNetCoreAppRuntimePackRidDir>$(CORE_ROOT)\runtimepack</MicrosoftNetCoreAppRuntimePackRidDir>
+    <MicrosoftNetCoreAppRuntimePackDir>$(CORE_ROOT)\runtimepack\</MicrosoftNetCoreAppRuntimePackDir>
+    <MicrosoftNetCoreAppRuntimePackRidDir>$(CORE_ROOT)\runtimepack\runtimes\browser-wasm\</MicrosoftNetCoreAppRuntimePackRidDir>
     <TargetFramework>$(NetCoreAppCurrent)</TargetFramework>
     <BuildDir>$(MSBuildThisFileDirectory)\obj\$(Configuration)\wasm</BuildDir>
     <AppDir>$(TestBinDir)/WasmApp/</AppDir>
@@ -12,7 +13,7 @@
     <NETCoreAppMaximumVersion>99.0</NETCoreAppMaximumVersion>
     <WasmAppBuilderTasksAssemblyPath>$(CORE_ROOT)\WasmAppBuilder\WasmAppBuilder.dll</WasmAppBuilderTasksAssemblyPath>
     <MonoAOTCompilerTasksAssemblyPath>$(CORE_ROOT)\MonoAOTCompiler\MonoAOTCompiler.dll</MonoAOTCompilerTasksAssemblyPath>
-    <EMSDK_PATH>$(CORE_ROOT)\emsdk</EMSDK_PATH>
+    <EMSDK_PATH>$(CORE_ROOT)\runtimepack\native\emsdk</EMSDK_PATH>
   </PropertyGroup>
 
   <Target Name="BuildApp" BeforeTargets="WasmBuildApp">
@@ -27,7 +28,9 @@
 
     <ItemGroup>
       <WasmAssembliesToBundle Include="$(TestBinDir)\*.dll" />
-      <WasmAssembliesToBundle Include="$(CORE_ROOT)\System.Private.Runtime.InteropServices.JavaScript.dll" />
+      <WasmAssembliesToBundle Include="$(MicrosoftNetCoreAppRuntimePackRidDir)\native\*.dll" />
+      <WasmAssembliesToBundle Include="$(MicrosoftNetCoreAppRuntimePackRidDir)\**\*.dll" />
+      <!-- <WasmAssembliesToBundle Include="$(CORE_ROOT)\System.Private.Runtime.InteropServices.JavaScript.dll" /> -->
       <WasmAssemblySearchPaths Include="$(MicrosoftNetCoreAppRuntimePackRidDir)\native"/>
       <WasmAssemblySearchPaths Include="$(MicrosoftNetCoreAppRuntimePackRidDir)"/>
       <WasmAssemblySearchPaths Include="$(CORE_ROOT)/TargetingPack" />
