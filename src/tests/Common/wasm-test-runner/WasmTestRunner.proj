@@ -14,6 +14,7 @@
     <WasmAppBuilderTasksAssemblyPath>$(CORE_ROOT)\WasmAppBuilder\WasmAppBuilder.dll</WasmAppBuilderTasksAssemblyPath>
     <MonoAOTCompilerTasksAssemblyPath>$(CORE_ROOT)\MonoAOTCompiler\MonoAOTCompiler.dll</MonoAOTCompilerTasksAssemblyPath>
     <EMSDK_PATH>$(CORE_ROOT)\runtimepack\native\emsdk</EMSDK_PATH>
+    <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
 
   <Target Name="BuildApp" BeforeTargets="WasmBuildApp">

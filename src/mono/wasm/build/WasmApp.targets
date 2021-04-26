@@ -500,6 +500,7 @@ EMSCRIPTEN_KEEPALIVE void mono_wasm_load_profiler_aot (const char *desc) { mono_
     <Error Condition="'$(_IsEMSDKMissing)' == 'true'"
            Text="$(_EMSDKMissingErrorMessage) Emscripten SDK is required for building native files." />
 
+    <Message Text="$!!!naricc_debug!!!: emcc-version.txt: $([MSBuild]::NormalizePath($(MicrosoftNetCoreAppRuntimePackRidNativeDir), 'src', 'emcc-version.txt'))" Importance="High"/>
     <ReadLinesFromFile File="$([MSBuild]::NormalizePath($(MicrosoftNetCoreAppRuntimePackRidNativeDir), 'src', 'emcc-version.txt'))">
         <Output TaskParameter="Lines" PropertyName="RuntimeEmccVersion" />
     </ReadLinesFromFile>
