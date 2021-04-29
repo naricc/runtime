@@ -290,7 +290,9 @@ build_Tests()
     if [[ "$__SkipManaged" != 1 ]]; then
         echo "Starting the Managed Tests Build..."
 
-        build_MSBuild_projects "Tests_Managed" "$__RepoRootDir/src/tests/build.proj" "Managed tests build (build tests)" "$__up"
+        # TODO: Figure out condition here.
+        __PublishRuntimeTests="true"
+        build_MSBuild_projects "Tests_Managed" "$__RepoRootDir/src/tests/build.proj" "Managed tests build (build tests)" "$__up" /p:PublishRuntimeTests=${__PublishRuntimeTests}
 
         if [[ "$?" -ne 0 ]]; then
             echo "${__ErrMsgPrefix}${__MsgPrefix}Error: managed test build failed. Refer to the build log files for details (above)"
