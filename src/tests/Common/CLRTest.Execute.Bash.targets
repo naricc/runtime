@@ -265,7 +265,7 @@ fi
       <PropertyGroup>
       <_CLRTestRunFile Condition="'$(CLRTestIsHosted)'=='true'">"$CORE_ROOT/corerun" $(CoreRunArgs)</_CLRTestRunFile>
 
-      <BashCLRTestPreCommands Condition="'$(CLRTestKind)' == 'BuildAndRun' and '$(TargetArchitecture)' == 'wasm'">
+      <BashCLRTestPreCommands Condition=" '$(CLRTestKind)' == 'BuildAndRun' and '$(TargetArchitecture)' == 'wasm' ">
    <![CDATA[
 # Build wasm app containing the test dll
 __Command=""
@@ -276,10 +276,11 @@ else
 fi
 
 export MONO_PATH=$CORE_ROOT/runtimepack/native/
-$__Command msbuild $CORE_ROOT/wasm-test-runner/WasmTestRunner.proj /p:RunAOTCompilation=true /p:NetCoreAppCurrent=$(NetCoreAppCurrent) /p:TestAssemblyFileName=$(MsBuildProjectName).dll /p:TestBinDir=`pwd` || exit $?
+$__Command msbuild $CORE_ROOT/wasm-test-runner/WasmTestRunner.proj /p:RunAOTCompilation=true /p:NetCoreAppCurrent=$(NetCoreAppCurrent) /p:TestAssemblyFileName=$(MsBuildProjectName).dll /p:TestBinDir=`pwd` /bl:$(MsBuildProjectName).binlog || exit $?
 
    ]]>
       </BashCLRTestPreCommands>
+
 
       <BashCLRTestLaunchCmds Condition="'$(CLRTestKind)' == 'BuildAndRun' And $(TargetOS) != 'Browser' And '$(TargetOS)' != 'Android' And '$(TargetArchitecture)' != 'arm64'">
     <![CDATA[
